@@ -6,7 +6,7 @@ from subprocess import PIPE, check_output, run
 from time import perf_counter
 
 try:
-    WEBHOOK_URL = os.environ['DIUN_NOTIF_SCRIPT_DISCORD_WEBHOOKURL']
+    WEBHOOK_URL = os.environ['BUILD_SCRIPT_DISCORD_WEBHOOKURL']
 except KeyError:
     print('BUILD ERROR: No webhook URL specified')
     exit(1)

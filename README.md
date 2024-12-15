@@ -1,2 +1,4 @@
 # docker-scripts
-## A collection of Dockerfiles for various applications
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-blue)](https://hub.docker.com/r/rafaelwastaken)
+
+A collection of auto-built Dockerfiles for various applications using diun
