@@ -1,5 +1,7 @@
 # diun.enable=true
 # diun.metadata.platforms=linux/amd64,linux/arm64
+# diun.metadata.output_image=diun
+# diun.metadata.output_tag=latest
 FROM crazymax/diun:latest
 
 RUN apk update && \

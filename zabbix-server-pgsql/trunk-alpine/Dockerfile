@@ -1,5 +1,7 @@
 # diun.enable=true
 # diun.metadata.platforms=linux/amd64,linux/arm64
+# diun.metadata.output_image=zabbix-server-pgsql
+# diun.metadata.output_tag=trunk-alpine
 FROM zabbix/zabbix-server-pgsql:trunk-alpine
 
 USER root

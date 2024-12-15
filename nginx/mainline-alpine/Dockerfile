@@ -24,6 +24,8 @@ RUN NGINX_VERSION=$(nginx -version 2>&1 | sed -E "s/nginx version: nginx\///") &
 
 # diun.enable=true
 # diun.metadata.platforms=linux/amd64,linux/arm64
+# diun.metadata.output_image=nginx
+# diun.metadata.output_tag=mainline-alpine
 FROM nginx:mainline-alpine
 
 WORKDIR /root
