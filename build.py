@@ -46,18 +46,6 @@ if not (PLATFORMS := os.environ.get('DIUN_ENTRY_METADATA_PLATFORMS')):
 else:
     print(f'Building for platforms {PLATFORMS}')
 
-# Some logic here
-def builderx_check():
-    # Check if we already have a builderx instance
-    if check_output('docker buildx ls | grep -i buildx | wc -l', shell=True).decode().strip() == '0':
-        print('Creating new buildx instance')
-        # Create a builderx instance
-        run('docker buildx create --name buildx --use', shell=True)
-    else:
-        print('Using existing buildx instance')
-        # Use the builderx instance
-        run('docker buildx use buildx', shell=True)
-
 if PROVIDER == 'dockerfile':
     if not (OUTPUT_IMAGE := os.environ.get('DIUN_ENTRY_METADATA_OUTPUT_IMAGE')) \
     or not (OUTPUT_TAG := os.environ.get('DIUN_ENTRY_METADATA_OUTPUT_TAG')):
@@ -86,13 +74,14 @@ if PROVIDER == 'dockerfile':
         )
         exit(1)
 
-    builderx_check()
+    # Create a builderx instance
+    run(f'docker buildx create --name buildx-{OUTPUT_IMAGE}-{OUTPUT_TAG}', shell=True)
 
     start = perf_counter()
 
     # Create a buildx instance, build the image for AMD64/ARM64, and push it to the registry
     build_proc = run(
-        f'docker buildx build --rm --platform {PLATFORMS} --push -t {DOCKER_HUB_USERNAME}/{OUTPUT_IMAGE}:{OUTPUT_TAG} /dockerfiles/{OUTPUT_IMAGE}/{OUTPUT_TAG}',
+        f'docker buildx build --builder=buildx-{OUTPUT_IMAGE}-{OUTPUT_TAG} --no-cache --platform {PLATFORMS} --push -t {DOCKER_HUB_USERNAME}/{OUTPUT_IMAGE}:{OUTPUT_TAG} /dockerfiles/{OUTPUT_IMAGE}/{OUTPUT_TAG}',
         stdout=PIPE,
         stderr=PIPE,
         shell=True
@@ -112,5 +101,8 @@ if PROVIDER == 'dockerfile':
     else:
         print(f'Built {IMAGE} for {PLATFORMS} after {round(time_taken, 2)}s, pushed to docker.io/{DOCKER_HUB_USERNAME}/{OUTPUT_IMAGE}:{OUTPUT_TAG}')
         result = f'✅ Built `{IMAGE}` for `{PLATFORMS}`\n⬆️ Pushed to `docker.io/{DOCKER_HUB_USERNAME}/{OUTPUT_IMAGE}:{OUTPUT_TAG}`\nℹ️ Build process exited with `{build_proc.returncode}`\n⏱️ Took `{round(time_taken, 2)}s`'
+
+    # Delete the buildx instance
+    run(f'docker buildx rm buildx-{OUTPUT_IMAGE}-{OUTPUT_TAG}', shell=True)
     
     requests.post(WEBHOOK_URL, data={'content': result}, files={'file': ('output.txt', '\n\n'.join(build_output))})
