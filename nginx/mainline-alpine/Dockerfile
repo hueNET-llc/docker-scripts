@@ -3,7 +3,7 @@ FROM nginx:mainline-alpine AS build-module
 
 WORKDIR /root
 
-ENV HEADERS_MORE_VERSION="0.34"
+ENV HEADERS_MORE_VERSION="0.37"
 
 ENV FANCY_INDEX_VERSION="0.5.2"
 
