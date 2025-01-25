@@ -30,10 +30,14 @@ COPY --from=build /opt/sdrplay_api /opt/sdrplay_api
 COPY --from=build /usr/local/include /usr/local/include
 COPY --from=build /usr/local/lib /usr/local/lib
 
+# Set the working directory to /opt/dump1090
+WORKDIR /opt/dump1090
+
 # Install dependencies needed to run dump1090 and make scripts executable
 RUN apt-get update && \
     apt-get install -y librtlsdr-dev libhidapi-libusb0 && \
     chmod +x /opt/dump1090/run.sh && \
     chmod +x /opt/sdrplay_api/sdrplay_apiService
 
-ENTRYPOINT [ "/opt/dump1090/run.sh" ]
+
+ENTRYPOINT [ "run.sh" ]

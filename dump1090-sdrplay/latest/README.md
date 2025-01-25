@@ -7,7 +7,9 @@ Based on `debian:bookworm-slim` with `SDRplay API v3.15.2`
 
 Any additional args will be passed directly to dump1090
 
+`⚠️ The SDRplay API breaks and segfaults a lot on startup. Enable auto-restart on the container so it keeps retrying until it starts properly.`
+
 Example:
 ```
-docker run rafaelwastaken/dump1090-sdrplay:latest --dev-sdrplay --gain 50 --modeac --max-range 300 --fix --phase-enhance --mlat --forward-mlat --quiet --lat <latitude> --lon <longitude> --net --net-bind-address 0.0.0.0
+docker run -d --name dump1090 --restart unless-stopped --privileged --device /dev/bus/usb -v /dev/bus/usb:/dev/bus/usb --tmpfs /run:exec,size=32M rafaelwastaken/dump1090-sdrplay:latest --dev-sdrplay --gain 50 --modeac --max-range 300 --fix --phase-enhance --mlat --forward-mlat --quiet --lat <latitude> --lon <longitude> --net --net-bind-address 0.0.0.0
 ```
