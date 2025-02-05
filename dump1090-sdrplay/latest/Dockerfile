@@ -39,5 +39,6 @@ RUN apt-get update && \
     chmod +x /opt/dump1090/run.sh && \
     chmod +x /opt/sdrplay_api/sdrplay_apiService
 
+WORKDIR /opt/dump1090
 
 ENTRYPOINT [ "run.sh" ]
