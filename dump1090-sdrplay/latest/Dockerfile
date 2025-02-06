@@ -41,4 +41,4 @@ RUN apt-get update && \
 
 WORKDIR /opt/dump1090
 
-ENTRYPOINT [ "run.sh" ]
+ENTRYPOINT [ "/opt/dump1090/run.sh" ]
