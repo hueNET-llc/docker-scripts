@@ -6,8 +6,7 @@ FROM zabbix/zabbix-server-pgsql:trunk-alpine
 
 USER root
 
-RUN apk update && \
-    apk add --no-cache jq expect openssh sshpass tini
+RUN apk add --update --no-cache jq expect openssh sshpass tini
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
 

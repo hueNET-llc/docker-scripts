@@ -4,6 +4,6 @@
 # diun.metadata.output_tag=alpine-3.21
 FROM alpine:3.21
 
-RUN apk add --no-cache --update tftp-hpa
+RUN apk add --no-cache --update tftp-hpa tzdata
 
 ENTRYPOINT [ "in.tftpd" ]

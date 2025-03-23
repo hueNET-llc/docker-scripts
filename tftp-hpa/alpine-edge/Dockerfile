@@ -4,6 +4,6 @@
 # diun.metadata.output_tag=alpine-edge
 FROM alpine:edge
 
-RUN apk add --no-cache --update tftp-hpa
+RUN apk add --no-cache --update tftp-hpa tzdata
 
 ENTRYPOINT [ "in.tftpd" ]
