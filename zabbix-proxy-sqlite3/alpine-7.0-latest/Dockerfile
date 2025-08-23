@@ -4,12 +4,11 @@
 # diun.metadata.output_tag=alpine-7.0-latest
 FROM zabbix/zabbix-proxy-sqlite3:alpine-7.0-latest
 
+# Switch to root (so we can install packages)
 USER root
 
+# Install jq, expect, openssh, sshpass, and tini
 RUN apk add --update --no-cache jq expect openssh sshpass tini
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
-
+# Switch back to the zabbix user
 USER 1997
-
-CMD ["/usr/sbin/zabbix_proxy", "--foreground", "-c", "/etc/zabbix/zabbix_proxy.conf"]

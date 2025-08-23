@@ -1,8 +1,8 @@
 # diun.enable=true
 # diun.metadata.platforms=linux/amd64,linux/arm64
-# diun.metadata.output_image=zabbix-server-pgsql
-# diun.metadata.output_tag=alpine-7.2-latest
-FROM zabbix/zabbix-server-pgsql:alpine-7.2-latest
+# diun.metadata.output_image=zabbix-proxy-sqlite3
+# diun.metadata.output_tag=alpine-7.4-latest
+FROM zabbix/zabbix-proxy-sqlite3:alpine-7.4-latest
 
 # Switch to root (so we can install packages)
 USER root
