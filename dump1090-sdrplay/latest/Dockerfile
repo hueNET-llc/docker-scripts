@@ -4,6 +4,7 @@ FROM debian:bookworm-slim AS build
 WORKDIR /opt
 
 COPY ./install_sdrplay.sh /opt/install_sdrplay.sh
+COPY ./usb_reset.c /opt/usb_reset.c
 
 RUN apt-get update && \
     apt-get install -y make pkg-config gcc git wget udev sudo librtlsdr-dev libhidapi-libusb0 expect && \
@@ -13,7 +14,8 @@ RUN apt-get update && \
     ./install_sdrplay.sh && \
     git clone https://github.com/SDRplay/dump1090 && \
     cd dump1090 && \
-    SDRPLAY=1 make dump1090
+    SDRPLAY=1 make dump1090 && \
+    cc /opt/usb_reset.c -o /opt/usb_reset
 
 # diun.enable=true
 # diun.metadata.platforms=linux/amd64,linux/arm64
@@ -29,13 +31,17 @@ COPY ./run.sh /opt/dump1090/run.sh
 COPY --from=build /opt/sdrplay_api /opt/sdrplay_api
 COPY --from=build /usr/local/include /usr/local/include
 COPY --from=build /usr/local/lib /usr/local/lib
+COPY --from=build /opt/usb_reset /opt/usb_reset
+COPY ./sdrplay_reset.sh /opt/sdrplay_reset.sh
 
 # Set the working directory to /opt/dump1090
 WORKDIR /opt/dump1090
 
 # Install dependencies needed to run dump1090 and make scripts executable
 RUN apt-get update && \
-    apt-get install -y librtlsdr-dev libhidapi-libusb0 && \
+    apt-get install -y udev usbutils librtlsdr-dev libhidapi-libusb0 && \
+    chmod +x /opt/usb_reset && \
+    chmod +x /opt/sdrplay_reset.sh && \
     chmod +x /opt/dump1090/run.sh && \
     chmod +x /opt/sdrplay_api/sdrplay_apiService
 
